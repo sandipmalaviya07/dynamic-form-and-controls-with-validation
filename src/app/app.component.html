@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="panel panel-default" style="width: 50%;">
+    <div class="panel-heading">  <h2>Dynamic Form Demo</h2>    </div>
+    <div class="panel-body">
+      <form [formGroup]="formDemo" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-md-12" *ngFor="let formData of lstForm" [ngSwitch]="true">
+            <div class="form-group">
+              <label for="{{formData.fieldName}}">{{formData.label}}</label>
+
+              <input type="{{formData.fieldType}}" name="{{formData.fieldName}}" class="form-control" *ngSwitchDefault
+               [formControlName]="formData.fieldName" [(ngModel)]="formData.fieldValue"
+               placeholder="{{formData.placeholder}}">
+
+
+              <select [id]="formData.fieldName" [formControlName]="formData.fieldName"
+                *ngSwitchCase="formData.fieldType === 'select'"
+                class="form-control" [(ngModel)]="formData.fieldValue">
+                <option [value]='0'>Select State</option>
+                <option *ngFor="let opt of formData.values" [value]="opt.internalValue">
+                  {{opt.displayValue}}</option>
+              </select>
+
+              <div class="custom-control custom-switch" *ngSwitchCase="formData.fieldType === 'radio'">
+                <input id="customSwitch1" type="checkbox" [checked]="formData.fieldValue == 'Y'? true:false" class="custom-control-input" >
+                <label class="custom-control-label" for="customSwitch1">Yes</label>
+              </div>
+
+              <div class="error-txt-msg" *ngIf="formDemo.controls[formData.fieldName].hasError('dateGreatherEqualToToday')" style="color: red;">
+                Date is not correct format or greater than equal to today date.
+              </div>
+              <div class="error-txt-msg" *ngIf="formDemo.controls[formData.fieldName].hasError('checkIsUserExisting')" style="color: red;">
+                UserName aleready exist.
+              </div>
+              <div *ngSwitchCase="formData.fieldType === 'select'">
+                <div  class="error-txt-msg mb-2" *ngIf="formDemo.controls[formData.fieldName].value == '0'" style="color: red;">
+                  Required field.
+                </div>
+              </div>
+              <div class="error-txt-msg mb-2" *ngIf="formDemo.controls[formData.fieldName].hasError('required')" style="color: red;">
+                Required field.
+              </div>
+              <div class="error-txt-msg mb-2" *ngIf="formDemo.controls[formData.fieldName].hasError('pattern')" style="color: red;">
+                Incorrect format.
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
